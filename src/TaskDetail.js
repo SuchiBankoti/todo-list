@@ -47,7 +47,7 @@ const TaskDetail = () => {
         labels: tags.map(({ text }) => text),
       };
     });
-  }, [tags.length]);
+  }, [tags, tags.length]);
 
   const handleDelete = (i) => {
     setTags(tags.filter((tag, index) => index !== i));
