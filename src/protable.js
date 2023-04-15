@@ -111,6 +111,7 @@ const MyTable = () => {
   return (
     <div className="table">
       <ProTable
+        headerTitle="TODO LIST"
         search={false}
         actionRef={tableRef}
         request={requestOnLoad}
