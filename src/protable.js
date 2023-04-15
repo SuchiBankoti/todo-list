@@ -9,7 +9,6 @@ import DeleteIcon from "./DeleteTask";
 import { Checkbox } from "antd";
 
 const MyTable = () => {
-  console.log("reload");
   const tableRef = useRef(null);
   const [tags, setTags] = useState([]);
   const columns = useMemo(() => {
