@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React } from "react";
 import { WithContext as ReactTags } from "react-tag-input";
 const KeyCodes = {
   comma: 188,
@@ -10,16 +10,13 @@ const Tags = (props) => {
   const { handleAddition, handleDelete, tags } = props.handleTag;
   return (
     <div className="Tag">
-      <h1> React Tags Example </h1>
-      <div>
-        <ReactTags
-          tags={tags}
-          delimiters={delimiters}
-          handleDelete={handleDelete}
-          handleAddition={handleAddition}
-          inputFieldPosition="bottom"
-        />
-      </div>
+      <ReactTags
+        tags={tags}
+        delimiters={delimiters}
+        handleDelete={handleDelete}
+        handleAddition={handleAddition}
+        inputFieldPosition="top"
+      />
     </div>
   );
 };

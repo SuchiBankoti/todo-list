@@ -8,12 +8,22 @@ function getStatus(datetime, is_completed) {
   const now = new Date();
   const dueDate = new Date(datetime);
   if (now > dueDate && !is_completed) {
-    return "overdue";
+    return "Overdue";
   } else if (now < dueDate && !is_completed) {
-    return "open";
+    return "Open";
   } else {
-    return "done";
+    return "Done";
   }
 }
 
-export { formattedDate, getStatus };
+const isoDateStringToWords = (isoDateString) => {
+  const date = new Date(isoDateString);
+  const day = date.toLocaleString("default", { weekday: "long" });
+  const month = date.toLocaleString("default", { month: "long" });
+  const year = date.getFullYear();
+  const dateOfMonth = date.getDate();
+
+  return `${day}, ${dateOfMonth} ${month} ${year}`;
+};
+
+export { formattedDate, getStatus, isoDateStringToWords };

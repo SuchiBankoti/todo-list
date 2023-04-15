@@ -1,16 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Tasks.css";
+import { SlCalender } from "react-icons/sl";
+import { RxCross1 } from "react-icons/rx";
 import { useParams, useLocation, Link } from "react-router-dom";
-import { postTask, updateTask, closeTask, reopenTask } from "./requests";
-import { useDispatch } from "react-redux";
-import { formattedDate, getStatus } from "./date";
-import { BsCircle } from "react-icons/bs";
+import getRequestHandle from "./requests";
 import Tags from "./Tags";
-
+import { formattedDate, isoDateStringToWords } from "./date";
+const DEFAULT_DUE = "2080-04-15T02:23:26.630657Z";
 const TaskDetail = () => {
-  const dispatch = useDispatch();
   const { id } = useParams();
-  const location = useLocation();
+  const { state } = useLocation();
   const [calender, setCalender] = useState(false);
   const [formData, setFormData] = useState(() => {
     if (id) {
@@ -18,26 +17,23 @@ const TaskDetail = () => {
         content,
         description,
         due: { datetime },
-        is_completed,
         labels,
-      } = location.state.record;
+      } = state.record;
       return {
         content,
         description,
         due_datetime: datetime,
-        is_completed,
         labels,
       };
-    } else {
-      return {
-        content: "",
-        description: "",
-        due_datetime: "2080-04-15T02:23:26.630657Z",
-        is_completed: false,
-        labels: [],
-      };
     }
+    return {
+      content: "",
+      description: "",
+      due_datetime: DEFAULT_DUE,
+      labels: [],
+    };
   });
+
   const [tags, setTags] = useState(
     formData.labels.map((str) => ({
       id: str,
@@ -52,6 +48,7 @@ const TaskDetail = () => {
       };
     });
   }, [tags.length]);
+
   const handleDelete = (i) => {
     setTags(tags.filter((tag, index) => index !== i));
   };
@@ -68,85 +65,79 @@ const TaskDetail = () => {
     });
   }
 
-  function toggleTask() {
-    if (formData.is_completed) {
-      setFormData((prev) => ({ ...prev, is_completed: !prev.is_completed }));
-    } else {
-      setFormData((prev) => ({ ...prev, is_completed: !prev.is_completed }));
+  function post() {
+    const action = {
+      type: state.query,
+      payload: {},
+    };
+    switch (state.query) {
+      case "UPDATE":
+        action.payload.id = id;
+        action.payload.data = formData;
+        break;
+      case "POST":
+        action.payload.data = formData;
+        break;
+      default:
+        break;
     }
-  }
-
-  function post(event) {
-    event.preventDefault();
-    if (id && !formData.is_completed) {
-      updateTask(formData, id);
-    } else if (!id && !formData.is_completed) {
-      postTask(formData);
-    } else if (id && formData.is_completed) {
-      dispatch({
-        type: "CLOSE_COMPLETED_TASK",
-        payload: { id },
-      });
-      closeTask(id);
-    } else {
-      return;
-    }
+    console.log(formData);
+    const fn = getRequestHandle(action);
+    fn();
   }
   return (
     <div className="task-detail">
-      <p>time and date and day1</p>
-      <form onSubmit={post} className="form">
-        <div>
-          {id ? (
-            <BsCircle
-              style={{
-                background: formData.is_completed ? "black" : "transparent",
-              }}
-              onClick={toggleTask}
-              className="circle"
-            />
-          ) : (
-            ""
-          )}
-        </div>
-        <input
-          className="title"
-          placeholder="Title"
-          type="text"
-          name="content"
-          value={formData.content}
-          onChange={handleChange}
-          maxLength="100"
-          required
-        />
-        <textarea
-          className="textarea"
-          maxLength="1000"
-          type="text"
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          required
-        />
-        <label onClick={() => setCalender((prev) => !prev)}>
-          Set Due Date and Time
-        </label>
-        {calender ? (
+      <form className="form">
+        <div className="left">
           <input
-            className="due-date"
-            type="datetime-local"
-            name="due_datetime"
-            value={formData.due_datetime}
-            onInput={handleChange}
+            className="title"
+            placeholder="Title"
+            type="text"
+            name="content"
+            value={formData.content}
+            onChange={handleChange}
+            maxLength="100"
+            required
           />
-        ) : (
-          ""
-        )}
-
-        <Tags handleTag={{ handleAddition, handleDelete, tags }} />
-        <input type="submit" value="submit" className="submit" />
+          <p className="date">{formattedDate}</p>
+          <div className="left-bottom">
+            <p className="count">{formData.description.length}</p>
+            <textarea
+              className="textarea"
+              maxLength="1000"
+              type="text"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </div>
+        <div className="right">
+          <p className="due-text">Due Date</p>
+          <div className="due">
+            <SlCalender onClick={() => setCalender((prev) => !prev)} />
+            <p>{isoDateStringToWords(formData.due_datetime)}</p>
+            {calender ? (
+              <input
+                className="due-date"
+                type="datetime-local"
+                name="due_datetime"
+                value={formData.due_datetime}
+                onInput={handleChange}
+              />
+            ) : (
+              ""
+            )}
+          </div>
+          <Tags handleTag={{ handleAddition, handleDelete, tags }} />
+        </div>
       </form>
-      <div>{getStatus(formData.due_datetime, formData.is_completed)}</div>
+      <div className="check-mark-container">
+        <Link to={"/"}>
+          <RxCross1 onClick={post} className="check-mark" />
+        </Link>
+      </div>
     </div>
   );
 };

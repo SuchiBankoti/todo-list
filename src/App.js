@@ -8,8 +8,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MyTable />}></Route>
-        <Route path="/:id" element={<TaskDetail />}></Route>
-        <Route path="/new" element={<TaskDetail />}></Route>
+        <Route path="/task/:id" element={<TaskDetail />}></Route>
+        <Route path="/task/new" element={<TaskDetail />}></Route>
       </Routes>
     </BrowserRouter>
   );

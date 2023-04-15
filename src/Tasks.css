@@ -1,3 +1,137 @@
-.circle {
+* {
+  border-radius: 3px;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.task-detail {
+  display: flex;
+  justify-content: center;
+  width: 1000px;
+  height: 750px;
+  margin: auto;
+  margin-top: 10px;
+  padding: 65px 2px 0 0;
+  position: relative;
+  border: 0.2px solid grey;
+}
+form {
+  display: flex;
+}
+.left {
+  width: 700px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 35px;
+}
+.title {
+  width: 100%;
+  height: 100px;
+  border: 0;
+  background: transparent;
+  font-size: 2rem;
+  color: #3399ff;
+  font-family: "Schibsted Grotesk", sans-serif;
+}
+.date {
+  width: 100%;
+  border-bottom: 1px solid grey;
+  border-radius: 0;
+}
+.left-bottom {
+  width: 100%;
+  display: flex;
+  height: 60%;
+  padding-top: 10px;
+}
+.count {
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
+  border: 1px solid grey;
+  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.textarea {
+  padding: 10px;
+  border: 0.5px solid grey;
+  width: 650px;
+  background: transparent;
+}
+.right {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  padding-top: 65px;
+  padding-left: 20px;
+  /* background-color: #3399ff; */
+}
+.due-text {
+  margin-bottom: 5px;
+}
+.due {
+  display: flex;
+  border-bottom: 1px solid grey;
+  align-items: center;
+  width: 250px;
+  height: 70px;
+  border-radius: 0;
+  color: #3399ff;
+}
+.Tag {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid gray;
+  height: 100px;
+  border-radius: 0;
+  width: 250px;
+}
+.tag-icon {
+  font-size: 1.5rem;
+}
+.check-mark-container {
+  position: absolute;
+  width: 100%;
+  height: 65px;
+  top: 0;
+  right: 0;
+  border-bottom: 0.5px solid grey;
+  text-align: right;
+  padding: 25px;
+  background-color: #3399ff;
+}
+.check-mark {
+  font-size: 2rem;
+}
+@media (max-width: 500px) {
+  .task-detail {
+    width: 450px;
+    position: absolute;
+    top: 10px;
+    left: 30px;
+  }
+  .left {
+    width: 270px;
+    padding: 5px;
+  }
+  .right {
+    width: 130px;
+  }
+  .due {
+    width: 100px;
+    font-size: 0.7rem;
+  }
+  .Tag {
+    width: 100px;
+    font-size: 0.7rem;
+  }
+  .count {
+    width: 25px;
+    height: 25px;
+    font-size: 0.6rem;
+    padding: 1px;
+  }
 }

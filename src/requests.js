@@ -1,4 +1,4 @@
-const request = async (params) => {
+const get = async (params) => {
   const response = await fetch("https://api.todoist.com/rest/v2/tasks", {
     headers: {
       Authorization: `Bearer ${process.env.REACT_APP_TOKEN}`,
@@ -6,7 +6,6 @@ const request = async (params) => {
     },
   });
   const data = await response.json();
-  console.log(data);
   return {
     data,
     success: true,
@@ -24,7 +23,7 @@ const postTask = async (data) => {
   });
 };
 
-const updateTask = async (data, id) => {
+const updateTask = async (id, data) => {
   await fetch(`https://api.todoist.com/rest/v2/tasks/${id}`, {
     method: "POST",
     headers: {
@@ -33,6 +32,7 @@ const updateTask = async (data, id) => {
     },
     body: JSON.stringify(data),
   });
+  console.log(data);
 };
 const deleteTask = async (id, onDelete) => {
   await fetch(`https://api.todoist.com/rest/v2/tasks/${id}`, {
@@ -53,33 +53,20 @@ const closeTask = async (id) => {
     },
   });
 };
-const reopenTask = async (id) => {
-  await fetch(`https://api.todoist.com/rest/v2/tasks/${id}/reopen`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${process.env.REACT_APP_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ due_datetime: "2080-04-15T02:23:26.630657Z" }),
-  });
-};
-const getCompletedData = async (id) => {
-  const response = await fetch(`https://api.todoist.com/rest/v2/tasks/${id}`, {
-    headers: {
-      Authorization: `Bearer ${process.env.REACT_APP_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-  });
-  const data = await response.json();
-  return data;
-};
 
-export {
-  request,
-  postTask,
-  updateTask,
-  deleteTask,
-  closeTask,
-  reopenTask,
-  getCompletedData,
+const getRequestHandle = (action = {}) => {
+  const { type, payload } = action;
+  switch (type) {
+    case "POST":
+      return () => postTask(payload.data);
+    case "UPDATE":
+      return () => updateTask(payload.id, payload.data);
+    case "CLOSE":
+      return () => closeTask(payload.id);
+    case "DELETE":
+      return () => deleteTask(payload.id, payload.onDelete);
+    default:
+      return () => get();
+  }
 };
+export default getRequestHandle;
